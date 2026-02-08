@@ -899,14 +899,16 @@
             const card = document.createElement('div');
             card.className = 'roteiro-card';
 
-            const ideia = item.ideia_copy || item.json?.ideia_copy || '';
-            const publico = item.publico_target || item.json?.publico_target || '';
-            const visual = item.visual || item.json?.visual || '';
-            const legenda = item.legenda || item.json?.legenda || '';
-            const locucao = item.locucao || item.json?.locucao || '';
-            const cta = item.cta_final || item.json?.cta_final || '';
+            // Extração segura dos dados com fallbacks
+            const ideia = item.ideia_copy || item.json?.ideia_copy || 'Sem ideia definida';
+            const publico = item.publico_target || item.json?.publico_target || 'Público não especificado';
+            const visual = item.visual || item.json?.visual || 'Visual não especificado';
+            const legenda = item.legenda || item.json?.legenda || 'Legenda não especificada';
+            const locucao = item.locucao || item.json?.locucao || 'Locução não especificada';
+            const cta = item.cta_final || item.json?.cta_final || 'CTA não especificada';
 
-            const fullText = `
+            // Se a API já mandar o roteiro completo formatado, usamos ele. Senão, montamos.
+            const fullText = item.roteiro_completo || `
 📌 IDEIA DE COPY:
 ${ideia}
 

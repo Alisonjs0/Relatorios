@@ -245,7 +245,7 @@ app.use((req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 API rodando na porta ${PORT}`);
+  console.log(`🚀 API rodando na porta ${PORT} aaaaaaaaaaa`);
   console.log(`📍 http://localhost:${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🪝 Webhook endpoint: http://localhost:${PORT}/webhook/roteiros`);
