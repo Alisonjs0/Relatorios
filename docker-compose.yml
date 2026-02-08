@@ -1,0 +1,11 @@
+services:
+  relatorios-app:
+    build: .
+    image: relatorios-api
+    container_name: relatorios-container
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production

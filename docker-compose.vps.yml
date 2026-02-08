@@ -1,0 +1,15 @@
+version: '3'
+services:
+  relatorios-app:
+    # SUBSTITUA 'seu_usuario' PELO SEU USUÁRIO DO DOCKER HUB
+    image: seu_usuario/relatorios-api:latest
+    container_name: relatorios-container
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    # Opcional: Se quiser persistir logs ou dados
+    # volumes:
+    #   - ./logs:/usr/src/app/logs

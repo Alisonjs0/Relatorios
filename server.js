@@ -4,10 +4,14 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
+const path = require('path');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Servir arquivos estáticos (HTML, CSS, JS)
+app.use(express.static(__dirname));
 
 // Armazenamento em memória (substitua por banco de dados em produção)
 let roteirosStorage = [];
@@ -72,7 +76,8 @@ app.post('/webhook/roteiros', (req, res) => {
       success: true,
       message: 'Dados recebidos com sucesso',
       webhookId: webhookLog.id,
-      roteirosRecebidos: Array.isArray(data) ? data.length : (data.roteiros?.length || 1)
+      roteirosRecebidos: Array.isArray(data) ? data.length : (data.roteiros?.length || 1),
+      data: Array.isArray(data) ? data : (data.roteiros || [data])
     });
   } catch (error) {
     console.error('Erro ao processar webhook:', error);
@@ -206,8 +211,13 @@ app.delete('/api/clear', (req, res) => {
   });
 });
 
-// Rota raiz com documentação
+// Rota raiz - Serve o arquivo HTML principal
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Documentação da API (movido para /api/docs)
+app.get('/api/docs', (req, res) => {
   res.json({
     name: 'API de Roteiros',
     version: '1.0.0',
