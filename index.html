@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Relatórios de Anúncios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-clear {
+            background: #e9ecef;
+            color: #333;
+        }
+
+        .btn-clear:hover {
+            background: #dee2e6;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-message {
+            display: none;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .status-message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .results-section {
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .results-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .results-header h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .roteiro-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .roteiro-card:hover {
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.15);
+        }
+
+        .roteiro-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .roteiro-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .roteiro-field {
+            margin-bottom: 15px;
+        }
+
+        .roteiro-field-label {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .roteiro-field-value {
+            color: #555;
+            line-height: 1.6;
+            padding: 10px;
+            background: white;
+            border-left: 3px solid #667eea;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .copy-button {
+            background: #6c757d;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: #5a6268;
+        }
+
+        .terms-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .terms-input-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: flex-start;
+            padding: 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-height: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .terms-input-box:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .term-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .term-tag button {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .term-tag button:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .terms-input-box input {
+            flex: 1;
+            min-width: 150px;
+            border: none;
+            padding: 6px 0;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .autocomplete-suggestions.show {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #333;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f9fa;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .suggestion-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f8f9fa;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            padding: 8px 12px;
+            background: #e9ecef;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            color: #555;
+        }
+
+        .preset-btn:hover {
+            background: #dee2e6;
+            border-color: #adb5bd;
+        }
+
+        .terms-counter {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Gerador de Relatórios</h1>
+            <p>Gere roteiros e ideias de copy baseados em anúncios de concorrentes</p>
+        </div>
+
+        <div class="form-section">
+            <form id="reportForm">
+                <div class="status-message" id="statusMessage"></div>
+
+                <div class="form-group">
+                    <label for="searchTerms">Termos de Busca:</label>
+                    
+                    <div class="preset-buttons">
+                        <button type="button" class="preset-btn" data-preset="loja">🏪 Loja de Carros</button>
+                        <button type="button" class="preset-btn" data-preset="anuncios">📢 Anúncios Automotivos</button>
+                        <button type="button" class="preset-btn" data-preset="protecao">🛡️ Proteções/Seguros</button>
+                        <button type="button" class="preset-btn" data-preset="locadora">🔑 Locadoras</button>
+                    </div>
+
+                    <div class="terms-input-wrapper">
+                        <div class="terms-input-box" id="termsInputBox">
+                            <input 
+                                type="text" 
+                                id="searchTerms" 
+                                name="searchTerms"
+                                placeholder="Digite um termo e pressione Enter..."
+                                autocomplete="off"
+                            >
+                        </div>
+                        <div class="autocomplete-suggestions" id="suggestions"></div>
+                        <div class="terms-counter"><span id="termsCount">0</span> termo(s) adicionado(s)</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        ▶️ Gerar Relatório
+                    </button>
+                    <button type="reset" class="btn-clear">
+                        🔄 Limpar
+                    </button>
+                </div>
+
+                <div class="loader" id="loader">
+                    <div class="spinner"></div>
+                    <p>Processando sua solicitação...</p>
+                    <small>Isso pode levar alguns minutos</small>
+                </div>
+            </form>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>📊 Resultados</h2>
+            </div>
+            <div id="resultsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configurar a URL do webhook aqui
+        const WEBHOOK_URL = 'https://n8n.smartcora.cloud/webhook-test/fd95dc0d-06c7-48ab-ab73-5a5090ffe94c';
+
+        // Termos pré-configurados por categoria
+        const PRESET_TERMS = {
+            loja: [
+                'Venda em 40 minutos',
+                'Dinheiro na hora',
+                'Aprovação de crédito imediata',
+                'Sem burocracia',
+                'Avaliação gratuita',
+                'Maior variedade de carros',
+                'Consignação inteligente',
+                'Troca com troco',
+                'Compra seu carro',
+                'Melhor preço garantido'
+            ],
+            anuncios: [
+                'Toyota Corolla',
+                'Jeep Compass',
+                'Honda HR-V',
+                'Fiat Pulse',
+                'Toyota Hilux',
+                'BMW 320i',
+                'Mercedes GLC',
+                'Volkswagen Polo',
+                'Honda Civic',
+                'Carro 2024',
+                'Carro zero km',
+                'Financiamento disponível'
+            ],
+            protecao: [
+                'Blindagem Nível 3A',
+                'Seguro total',
+                'Proteção contra roubo',
+                'Rastreador GPS incluso',
+                'Garantia estendida',
+                'Cobertura contra colisão',
+                'Assistência 24h',
+                'Perda total coberta',
+                'Vidros blindados',
+                'Seguro desemprego'
+            ],
+            locadora: [
+                'Aluguel de carro por dia',
+                'Aluguel por semana',
+                'Aluguel mensal',
+                'Sem taxas adicionais',
+                'Carro com motorista',
+                'Frota renovada',
+                'Seguro incluído',
+                'Entrega a domicílio',
+                'Carro executivo',
+                'Van para eventos',
+                'Promoção de aluguel',
+                'Desconto para PJ'
+            ]
+        };
+
+        // Todos os termos disponíveis para autocomplete
+        const ALL_TERMS = Object.values(PRESET_TERMS).flat();
+
+        let selectedTerms = [];
+
+        const form = document.getElementById('reportForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const loader = document.getElementById('loader');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const submitBtn = document.getElementById('submitBtn');
+        const searchInput = document.getElementById('searchTerms');
+        const termsInputBox = document.getElementById('termsInputBox');
+        const suggestionsBox = document.getElementById('suggestions');
+        const termsCount = document.getElementById('termsCount');
+        const clearBtn = document.querySelector('.btn-clear');
+
+        // Event listeners para termos de busca
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTerm(searchInput.value.trim());
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const value = e.target.value.trim().toLowerCase();
+            if (value.length > 0) {
+                showSuggestions(value);
+            } else {
+                hideSuggestions();
+            }
+        });
+
+        // Limpar todos os termos
+        clearBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            selectedTerms = [];
+            renderTerms();
+            searchInput.value = '';
+            hideSuggestions();
+            statusMessage.className = 'status-message';
+            resultsSection.classList.remove('show');
+            resultsContainer.innerHTML = '';
+        });
+
+        // Event listeners para presets
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const preset = btn.dataset.preset;
+                addMultipleTerms(PRESET_TERMS[preset]);
+                searchInput.value = '';
+                hideSuggestions();
+            });
+        });
+
+        // Click fora para esconder sugestões
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.terms-input-wrapper')) {
+                hideSuggestions();
+            }
+        });
+
+        function addTerm(term) {
+            if (!term || selectedTerms.includes(term)) {
+                searchInput.value = '';
+                return;
+            }
+
+            selectedTerms.push(term);
+            renderTerms();
+            searchInput.value = '';
+            hideSuggestions();
+            searchInput.focus();
+        }
+
+        function addMultipleTerms(terms) {
+            terms.forEach(term => {
+                if (!selectedTerms.includes(term)) {
+                    selectedTerms.push(term);
+                }
+            });
+            renderTerms();
+        }
+
+        function removeTerm(term) {
+            selectedTerms = selectedTerms.filter(t => t !== term);
+            renderTerms();
+            searchInput.focus();
+        }
+
+        function renderTerms() {
+            // Limpar tags antigas
+            document.querySelectorAll('.term-tag').forEach(tag => tag.remove());
+
+            // Renderizar novas tags
+            selectedTerms.forEach(term => {
+                const tag = document.createElement('div');
+                tag.className = 'term-tag';
+                tag.innerHTML = `
+                    ${term}
+                    <button type="button" onclick="removeTerm('${term.replace(/'/g, "\\'")}')">✕</button>
+                `;
+                termsInputBox.insertBefore(tag, searchInput);
+            });
+
+            // Atualizar contador
+            termsCount.textContent = selectedTerms.length;
+        }
+
+        function showSuggestions(value) {
+            const filtered = ALL_TERMS.filter(term => 
+                term.toLowerCase().includes(value) && 
+                !selectedTerms.includes(term)
+            );
+
+            if (filtered.length === 0) {
+                suggestionsBox.innerHTML = '<div class="suggestion-item disabled">Nenhuma sugestão encontrada</div>';
+            } else {
+                suggestionsBox.innerHTML = filtered.map(term => 
+                    `<div class="suggestion-item" onclick="addTerm('${term.replace(/'/g, "\\'")}')">${term}</div>`
+                ).join('');
+            }
+
+            suggestionsBox.classList.add('show');
+        }
+
+        function hideSuggestions() {
+            suggestionsBox.classList.remove('show');
+            suggestionsBox.innerHTML = '';
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (selectedTerms.length === 0) {
+                showStatus('Por favor, adicione pelo menos um termo de busca', 'error');
+                return;
+            }
+
+            // Mostrar loader
+            loader.style.display = 'block';
+            resultsSection.classList.remove('show');
+            resultsContainer.innerHTML = '';
+            statusMessage.className = 'status-message';
+            submitBtn.disabled = true;
+
+            try {
+                showStatus('Iniciando processamento...', 'info');
+
+                // Enviar dados para o webhook
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        searchTerms: selectedTerms,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+
+                const data = await response.json();
+                showStatus('Relatório gerado com sucesso!', 'success');
+                displayResults(data);
+
+            } catch (error) {
+                console.error('Erro:', error);
+                showStatus(
+                    `Erro ao processar: ${error.message}. Verifique se a URL do webhook está correta e acessível.`,
+                    'error'
+                );
+                resultsContainer.innerHTML = `
+                    <div class="error-box">
+                        <strong>Erro na Requisição:</strong><br>
+                        ${error.message}<br>
+                        <small>Certifique-se de que o webhook está ativo no n8n</small>
+                    </div>
+                `;
+                resultsSection.classList.add('show');
+            } finally {
+                loader.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+        }
+
+        function displayResults(data) {
+            resultsSection.classList.add('show');
+            resultsContainer.innerHTML = '';
+
+            // Se for um array de resultados
+            if (Array.isArray(data)) {
+                if (data.length === 0) {
+                    resultsContainer.innerHTML = '<p>Nenhum resultado encontrado.</p>';
+                    return;
+                }
+
+                data.forEach((item, index) => {
+                    const card = createRoteiroCard(item, index + 1);
+                    resultsContainer.appendChild(card);
+                });
+            } else if (data.error) {
+                resultsContainer.innerHTML = `
+                    <div class="error-box">
+                        <strong>Erro:</strong> ${data.error}
+                    </div>
+                `;
+            } else {
+                resultsContainer.innerHTML = `
+                    <div class="roteiro-card">
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        function createRoteiroCard(item, number) {
+            const card = document.createElement('div');
+            card.className = 'roteiro-card';
+
+            const ideia = item.ideia_copy || item.json?.ideia_copy || '';
+            const publico = item.publico_target || item.json?.publico_target || '';
+            const visual = item.visual || item.json?.visual || '';
+            const legenda = item.legenda || item.json?.legenda || '';
+            const locucao = item.locucao || item.json?.locucao || '';
+            const cta = item.cta_final || item.json?.cta_final || '';
+
+            const fullText = `
+IDEIA DE COPY:
+${ideia}
+
+PÚBLICO-ALVO:
+${publico}
+
+--- ROTEIRO (30s) ---
+VISUAL (0–3s):
+${visual}
+
+LEGENDA (Texto na tela):
+${legenda}
+
+LOCUÇÃO:
+${locucao}
+
+CTA FINAL:
+${cta}
+            `.trim();
+
+            card.innerHTML = `
+                <div class="roteiro-number">${number}</div>
+                <div class="roteiro-title">💡 Ideia de Copy</div>
+                <div class="roteiro-field">
+                    <div class="roteiro-field-value">${escapeHtml(ideia)}</div>
+                </div>
+
+                <div class="roteiro-title" style="margin-top: 20px;">👥 Público-Alvo</div>
+                <div class="roteiro-field">
+                    <div class="roteiro-field-value">${escapeHtml(publico)}</div>
+                </div>
+
+                <div class="roteiro-title" style="margin-top: 20px;">🎬 Roteiro (30s)</div>
+                
+                <div class="roteiro-field">
+                    <div class="roteiro-field-label">📹 Visual (0-3s)</div>
+                    <div class="roteiro-field-value">${escapeHtml(visual)}</div>
+                </div>
+
+                <div class="roteiro-field">
+                    <div class="roteiro-field-label">📝 Legenda</div>
+                    <div class="roteiro-field-value">${escapeHtml(legenda)}</div>
+                </div>
+
+                <div class="roteiro-field">
+                    <div class="roteiro-field-label">🎙️ Locução</div>
+                    <div class="roteiro-field-value">${escapeHtml(locucao)}</div>
+                </div>
+
+                <div class="roteiro-field">
+                    <div class="roteiro-field-label">🚀 CTA Final</div>
+                    <div class="roteiro-field-value">${escapeHtml(cta)}</div>
+                </div>
+
+                <button class="copy-button" onclick="copyToClipboard(\`${escapeForJs(fullText)}\`)">
+                    📋 Copiar Roteiro Completo
+                </button>
+            `;
+
+            return card;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function escapeForJs(text) {
+            return text
+                .replace(/\\/g, '\\\\')
+                .replace(/`/g, '\\`')
+                .replace(/\$/g, '\\$');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showStatus('✅ Copiado para a área de transferência!', 'success');
+                setTimeout(() => {
+                    statusMessage.className = 'status-message';
+                }, 3000);
+            }).catch(() => {
+                showStatus('❌ Erro ao copiar', 'error');
+            });
+        }
+    </script>
+</body>
+</html>
