@@ -1,0 +1,51 @@
+{
+  "roteiros": [
+    {
+      "index": 1,
+      "ideia_copy": "Realize a escolha inteligente que a maioria já fez.",
+      "publico_target": "Comprador que busca validação social e confiança na decisão de compra de um carro, evitando arrependimentos.",
+      "visual": "Pessoa olhando com desconfiança para um carro, depois sorrindo e acenando para amigos em carros semelhantes que passam.",
+      "legenda": "Sua próxima decisão, validada por quem entende.",
+      "locucao": "Cansado de dúvidas ao escolher seu próximo carro? Não confie apenas na sua intuição. Milhares já descobriram a facilidade de um processo de compra transparente, com suporte dedicado. Eles fizeram a escolha certa. Entenda o valor de um bom negócio, da avaliação justa do seu usado ao financiamento descomplicado. Junte-se a quem já aprovou.",
+      "cta_final": "Conheça os diferenciais que nos tornam a escolha popular."
+    },
+    {
+      "index": 2,
+      "ideia_copy": "Não perca a oportunidade de dirigir o carro que você merece.",
+      "publico_target": "Comprador que está pesquisando ativamente, mas com medo de perder uma oferta ou o carro ideal por indecisão.",
+      "visual": "Um carro específico (modelo cobiçado) com o letreiro \"VENDIDO\" aparecendo rapidamente. O rosto do comprador demonstra frustração.",
+      "legenda": "Essa oportunidade não vai esperar.",
+      "locucao": "Quantas vezes você deixou para depois e perdeu a chance? O carro que você procura, com as condições que você sonha, pode não estar disponível por muito tempo. As melhores oportunidades são raras e desaparecem rápido. Não adie a conquista da sua liberdade. Garanta agora a melhor condição e evite o arrependimento de perder o seu carro ideal.",
+      "cta_final": "Agende seu test drive exclusivo antes que seja tarde."
+    },
+    {
+      "index": 3,
+      "ideia_copy": "Transforme a compra do seu carro em uma experiência sem preocupações.",
+      "publico_target": "Comprador que tem objeções e medos relacionados à complexidade, burocracia, e possíveis problemas na compra de um carro.",
+      "visual": "Pessoa com papelada confusa nas mãos, expressão de estresse. Corta para a mesma pessoa sorrindo, recebendo as chaves de um carro de um vendedor simpático, sem papéis.",
+      "legenda": "Diga adeus à complicação.",
+      "locucao": "A compra de um carro não precisa ser um pesadelo. Chega de burocracia, papeladas infinitas e incertezas. Oferecemos um processo simplificado, onde cada etapa é clara e você tem total suporte. Da documentação ao financiamento, cuidamos de tudo. Sua única preocupação será escolher a cor. Tenha a tranquilidade que você merece.",
+      "cta_final": "Simplifique sua compra: fale com nossos especialistas."
+    },
+    {
+      "index": 4,
+      "ideia_copy": "Receba um pacote completo de benefícios na compra do seu carro.",
+      "publico_target": "Comprador que valoriza um serviço \"tudo incluído\", buscando o máximo de valor e conveniência sem ter que lidar com múltiplos fornecedores ou preocupações.",
+      "visual": "Pessoa montando um quebra-cabeça de carro com peças faltando, depois as peças se encaixam sozinhas formando um carro completo e brilhante.",
+      "legenda": "Valor total, sem esforço extra.",
+      "locucao": "O que você ganha além do carro? Receba uma solução completa pensada para você. Oferecemos pacotes que incluem desde condições especiais de financiamento até suporte pós-compra. Tudo organizado para sua total conveniência. Desfrute da clareza e da vantagem de ter todos os detalhes importantes resolvidos, sem custos ocultos ou surpresas.",
+      "cta_final": "Descubra seu plano exclusivo."
+    },
+    {
+      "index": 5,
+      "ideia_copy": "Experimente uma forma inovadora de comprar seu carro.",
+      "publico_target": "Comprador frustrado com métodos tradicionais de compra de carro, buscando uma experiência mais moderna, transparente e centrada no cliente.",
+      "visual": "Pessoa em uma concessionária lotada e barulhenta com expressão de cansaço. Corta para a mesma pessoa em um ambiente tranquilo, usando um tablet para explorar opções de carro.",
+      "legenda": "Sua jornada automotiva repensada.",
+      "locucao": "Cansado da mesma experiência de sempre ao comprar um carro? Descubra um processo que coloca você no controle, com transparência total e sem pressão. Mostramos como é possível ter uma jornada mais leve, do primeiro contato à entrega das chaves. Compare a frustração do passado com a tranquilidade de uma nova abordagem. Sua satisfação é nossa prioridade.",
+      "cta_final": "Comece sua nova jornada de compra hoje."
+    }
+  ],
+  "timestamp": "2026-02-07T12:00:00Z",
+  "status": "sucesso"
+}
