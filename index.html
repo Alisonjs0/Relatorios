@@ -851,30 +851,48 @@
             resultsSection.classList.add('show');
             resultsContainer.innerHTML = '';
 
-            // Se for um array de resultados
-            if (Array.isArray(data)) {
-                if (data.length === 0) {
-                    resultsContainer.innerHTML = '<p>Nenhum resultado encontrado.</p>';
-                    return;
-                }
+            let roteiros = [];
 
-                data.forEach((item, index) => {
-                    const card = createRoteiroCard(item, index + 1);
-                    resultsContainer.appendChild(card);
+            // Normalizar os dados (lidar com estrutura aninhada do n8n)
+            if (Array.isArray(data)) {
+                // Estrutura nova: O array contém objetos que têm uma propriedade "data" que é um array
+                roteiros = data.flatMap(item => {
+                    // Caso 1: Item tem propriedade 'data' que é array (formato novo)
+                    if (item.data && Array.isArray(item.data)) {
+                        return item.data;
+                    } 
+                    // Caso 2: O item já é o roteiro (formato antigo ou flat)
+                    return item;
                 });
-            } else if (data.error) {
-                resultsContainer.innerHTML = `
-                    <div class="error-box">
-                        <strong>Erro:</strong> ${data.error}
-                    </div>
-                `;
+            } else if (data.data && Array.isArray(data.data)) {
+                // Caso venha um objeto único com propriedade data
+                roteiros = data.data;
             } else {
-                resultsContainer.innerHTML = `
-                    <div class="roteiro-card">
-                        <pre>${JSON.stringify(data, null, 2)}</pre>
-                    </div>
-                `;
+                // Fallback
+                roteiros = [data];
             }
+
+            // Filtrar itens inválidos (sem conteúdo)
+            roteiros = roteiros.filter(item => item && (item.ideia_copy || item.visual || (item.json && item.json.ideia_copy)));
+
+            if (roteiros.length === 0) {
+                // Verifica se houve erro explícito na resposta
+                if (data.error || (data[0] && data[0].error)) {
+                     resultsContainer.innerHTML = `
+                        <div class="error-box">
+                            <strong>Erro:</strong> ${data.error || data[0].error}
+                        </div>
+                    `;
+                } else {
+                    resultsContainer.innerHTML = '<p>Nenhum roteiro encontrado nos dados recebidos.</p>';
+                }
+                return;
+            }
+
+            roteiros.forEach((item, index) => {
+                const card = createRoteiroCard(item, index + 1);
+                resultsContainer.appendChild(card);
+            });
         }
 
         function createRoteiroCard(item, number) {
