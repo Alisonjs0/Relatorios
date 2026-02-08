@@ -200,60 +200,170 @@
         }
 
         .roteiro-card {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid #eee;
         }
 
         .roteiro-card:hover {
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
 
-        .roteiro-number {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .roteiro-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px 25px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .roteiro-number-badge {
+            background: #667eea;
             color: white;
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 32px;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-
-        .roteiro-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .roteiro-field {
-            margin-bottom: 15px;
-        }
-
-        .roteiro-field-label {
-            font-size: 12px;
-            color: #667eea;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .roteiro-field-value {
-            color: #555;
-            line-height: 1.6;
-            padding: 10px;
-            background: white;
-            border-left: 3px solid #667eea;
-            border-radius: 4px;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 20px;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+
+        .roteiro-content {
+            padding: 25px;
+        }
+
+        .section-title {
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #ebf4ff;
+            padding-bottom: 8px;
+        }
+        
+        .section-title i { color: #667eea; }
+
+        .highlight-box {
+            background-color: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 25px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .target-box {
+            background-color: #fffaf0;
+            border-left: 4px solid #ed8936;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 25px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .script-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .script-row {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .script-row:last-child {
+            border-bottom: none;
+        }
+
+        .script-label {
+            background: #f7fafc;
+            width: 120px;
+            padding: 15px;
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            font-size: 13px;
+            border-right: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+        
+        .script-label .emoji { 
+            font-size: 20px; 
+            margin-bottom: 4px;
+            display: block; 
+        }
+
+        .script-text {
+            padding: 15px;
+            color: #2d3748;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .cta-box {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(102, 126, 234, 0.25);
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 15px;
+            border-top: 1px solid #edf2f7;
+        }
+
+        /* Improved Loader */
+        .loader {
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite, pulse 2s ease-in-out infinite;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        .roteiro-number { display: none; } /* Hide old style */
 
         .error-box {
             background: #f8d7da;
@@ -687,63 +797,74 @@
             suggestionsBox.classList.add('show');
         }
 
-        function hideSuggestions() {
-            suggestionsBox.classList.remove('show');
-            suggestionsBox.innerHTML = '';
-        }
+📌 IDEIA DE COPY:
+${ideia}
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+👥 PÚBLICO-ALVO:
+${publico}
 
-            if (selectedTerms.length === 0) {
-                showStatus('Por favor, adicione pelo menos um termo de busca', 'error');
-                return;
-            }
+🎬 ROTEIRO (30s)
+--------------------------------
+📹 VISUAL:
+${visual}
 
-            // Mostrar loader
-            loader.style.display = 'block';
-            resultsSection.classList.remove('show');
-            resultsContainer.innerHTML = '';
-            statusMessage.className = 'status-message';
-            submitBtn.disabled = true;
+📝 LEGENDA:
+${legenda}
 
-            try {
-                showStatus('Iniciando processamento...', 'info');
+🎙️ LOCUÇÃO:
+${locucao}
 
-                // Enviar dados para o webhook
-                const response = await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        searchTerms: selectedTerms,
-                        timestamp: new Date().toISOString()
-                    })
-                });
+🚀 CTA FINAL:
+${cta}
+            `.trim();
 
-                if (!response.ok) {
-                    throw new Error(`Erro HTTP: ${response.status}`);
-                }
+            card.innerHTML = `
+                <div class="roteiro-header">
+                    <span class="roteiro-number-badge">Opção #${number}</span>
+                </div>
+                
+                <div class="roteiro-content">
+                    <div class="section-title">💡 Ideia Central</div>
+                    <div class="highlight-box">${escapeHtml(ideia)}</div>
 
-                const data = await response.json();
-                showStatus('Relatório gerado com sucesso!', 'success');
-                displayResults(data.data || data);
+                    <div class="section-title">👥 Público-Alvo</div>
+                    <div class="target-box">${escapeHtml(publico)}</div>
 
-            } catch (error) {
-                console.error('Erro:', error);
-                showStatus(
-                    `Erro ao processar: ${error.message}. Verifique se a URL do webhook está correta e acessível.`,
-                    'error'
-                );
-                resultsContainer.innerHTML = `
-                    <div class="error-box">
-                        <strong>Erro na Requisição:</strong><br>
-                        ${error.message}<br>
-                        <small>Certifique-se de que o webhook está ativo no n8n</small>
+                    <div class="section-title">🎬 Roteiro Detalhado</div>
+                    <div class="script-grid">
+                        <div class="script-row">
+                            <div class="script-label">
+                                <span class="emoji">📹</span>
+                                Visual
+                            </div>
+                            <div class="script-text">${escapeHtml(visual)}</div>
+                        </div>
+                        <div class="script-row">
+                            <div class="script-label">
+                                <span class="emoji">📝</span>
+                                Legenda
+                            </div>
+                            <div class="script-text">${escapeHtml(legenda)}</div>
+                        </div>
+                        <div class="script-row">
+                            <div class="script-label">
+                                <span class="emoji">🎙️</span>
+                                Locução
+                            </div>
+                            <div class="script-text">${escapeHtml(locucao)}</div>
+                        </div>
                     </div>
-                `;
-                resultsSection.classList.add('show');
+
+                    <div class="cta-box">
+                        🚀 ${escapeHtml(cta)}
+                    </div>
+
+                    <div class="action-bar">
+                        <button class="copy-button" onclick="copyToClipboard(\`${escapeForJs(fullText)}\`)">
+                            📋 Copiar Tudo
+                        </button>
+                    </div>
+                </divection.classList.add('show');
             } finally {
                 loader.style.display = 'none';
                 submitBtn.disabled = false;
