@@ -797,6 +797,98 @@
             suggestionsBox.classList.add('show');
         }
 
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Combinar termos das tags + input atual
+            const currentInput = searchInput.value.trim();
+            const allTerms = [...selectedTerms];
+            if (currentInput && !allTerms.includes(currentInput)) {
+                allTerms.push(currentInput);
+            }
+
+            if (allTerms.length === 0) {
+                showStatus('Por favor, adicione pelo menos um termo de busca.', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            loader.style.display = 'block';
+            statusMessage.style.display = 'none';
+            resultsSection.classList.remove('show');
+            resultsContainer.innerHTML = '';
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        searchTerms: allTerms,
+                        message: allTerms.join(', ') 
+                    })
+                });
+
+                if (!response.ok) throw new Error('Erro na requisição');
+
+                const data = await response.json();
+                displayResults(data);
+
+            } catch (error) {
+                console.error('Erro:', error);
+                showStatus('Erro ao gerar relatório. Verifique os logs.', 'error');
+            } finally {
+                loader.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+        }
+
+        function displayResults(data) {
+            resultsSection.classList.add('show');
+            resultsContainer.innerHTML = '';
+
+            // Se for um array de resultados
+            if (Array.isArray(data)) {
+                if (data.length === 0) {
+                    resultsContainer.innerHTML = '<p>Nenhum resultado encontrado.</p>';
+                    return;
+                }
+
+                data.forEach((item, index) => {
+                    const card = createRoteiroCard(item, index + 1);
+                    resultsContainer.appendChild(card);
+                });
+            } else if (data.error) {
+                resultsContainer.innerHTML = `
+                    <div class="error-box">
+                        <strong>Erro:</strong> ${data.error}
+                    </div>
+                `;
+            } else {
+                resultsContainer.innerHTML = `
+                    <div class="roteiro-card">
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        function createRoteiroCard(item, number) {
+            const card = document.createElement('div');
+            card.className = 'roteiro-card';
+
+            const ideia = item.ideia_copy || item.json?.ideia_copy || '';
+            const publico = item.publico_target || item.json?.publico_target || '';
+            const visual = item.visual || item.json?.visual || '';
+            const legenda = item.legenda || item.json?.legenda || '';
+            const locucao = item.locucao || item.json?.locucao || '';
+            const cta = item.cta_final || item.json?.cta_final || '';
+
+            const fullText = `
 📌 IDEIA DE COPY:
 ${ideia}
 
@@ -864,117 +956,7 @@ ${cta}
                             📋 Copiar Tudo
                         </button>
                     </div>
-                </divection.classList.add('show');
-            } finally {
-                loader.style.display = 'none';
-                submitBtn.disabled = false;
-            }
-        });
-
-        function showStatus(message, type) {
-            statusMessage.textContent = message;
-            statusMessage.className = `status-message ${type}`;
-        }
-
-        function displayResults(data) {
-            resultsSection.classList.add('show');
-            resultsContainer.innerHTML = '';
-
-            // Se for um array de resultados
-            if (Array.isArray(data)) {
-                if (data.length === 0) {
-                    resultsContainer.innerHTML = '<p>Nenhum resultado encontrado.</p>';
-                    return;
-                }
-
-                data.forEach((item, index) => {
-                    const card = createRoteiroCard(item, index + 1);
-                    resultsContainer.appendChild(card);
-                });
-            } else if (data.error) {
-                resultsContainer.innerHTML = `
-                    <div class="error-box">
-                        <strong>Erro:</strong> ${data.error}
-                    </div>
-                `;
-            } else {
-                resultsContainer.innerHTML = `
-                    <div class="roteiro-card">
-                        <pre>${JSON.stringify(data, null, 2)}</pre>
-                    </div>
-                `;
-            }
-        }
-
-        function createRoteiroCard(item, number) {
-            const card = document.createElement('div');
-            card.className = 'roteiro-card';
-
-            const ideia = item.ideia_copy || item.json?.ideia_copy || '';
-            const publico = item.publico_target || item.json?.publico_target || '';
-            const visual = item.visual || item.json?.visual || '';
-            const legenda = item.legenda || item.json?.legenda || '';
-            const locucao = item.locucao || item.json?.locucao || '';
-            const cta = item.cta_final || item.json?.cta_final || '';
-
-            const fullText = `
-IDEIA DE COPY:
-${ideia}
-
-PÚBLICO-ALVO:
-${publico}
-
---- ROTEIRO (30s) ---
-VISUAL (0–3s):
-${visual}
-
-LEGENDA (Texto na tela):
-${legenda}
-
-LOCUÇÃO:
-${locucao}
-
-CTA FINAL:
-${cta}
-            `.trim();
-
-            card.innerHTML = `
-                <div class="roteiro-number">${number}</div>
-                <div class="roteiro-title">💡 Ideia de Copy</div>
-                <div class="roteiro-field">
-                    <div class="roteiro-field-value">${escapeHtml(ideia)}</div>
                 </div>
-
-                <div class="roteiro-title" style="margin-top: 20px;">👥 Público-Alvo</div>
-                <div class="roteiro-field">
-                    <div class="roteiro-field-value">${escapeHtml(publico)}</div>
-                </div>
-
-                <div class="roteiro-title" style="margin-top: 20px;">🎬 Roteiro (30s)</div>
-                
-                <div class="roteiro-field">
-                    <div class="roteiro-field-label">📹 Visual (0-3s)</div>
-                    <div class="roteiro-field-value">${escapeHtml(visual)}</div>
-                </div>
-
-                <div class="roteiro-field">
-                    <div class="roteiro-field-label">📝 Legenda</div>
-                    <div class="roteiro-field-value">${escapeHtml(legenda)}</div>
-                </div>
-
-                <div class="roteiro-field">
-                    <div class="roteiro-field-label">🎙️ Locução</div>
-                    <div class="roteiro-field-value">${escapeHtml(locucao)}</div>
-                </div>
-
-                <div class="roteiro-field">
-                    <div class="roteiro-field-label">🚀 CTA Final</div>
-                    <div class="roteiro-field-value">${escapeHtml(cta)}</div>
-                </div>
-
-                <button class="copy-button" onclick="copyToClipboard(\`${escapeForJs(fullText)}\`)">
-                    📋 Copiar Roteiro Completo
-                </button>
             `;
 
             return card;
